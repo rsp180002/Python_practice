@@ -1,0 +1,20 @@
+import requests
+from bs4 import BeautifulSoup as soup
+
+headers={
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36'
+}
+data ={
+    'changeLocale':None, 
+'appReceiptNum': 'XXXXXXXXXXXXX', // Add your number and check the status
+'initCaseSearch': 'CHECK STATUS'
+}
+with requests.Session() as s:
+    url="https://egov.uscis.gov/casestatus/mycasestatus.do"
+    r = s.post(url,data=data,headers=headers)
+    sp= soup(r.content,"html.parser")
+    status= sp.find("div",{"class":"rows text-center"})
+    print(status)
+    f=open("caseStatus.html",'w')
+    f.write(str(status))
+    f.close()
